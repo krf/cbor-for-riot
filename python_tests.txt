@@ -1,0 +1,103 @@
+Tests:
+
+********************   Major type 0 (unsigned integers):   ********************
+Encode 20:
+unser output: 0x14
+python: >>> flynn.dumps(20)
+'\x14'  // 00010100 in binary
+
+Decode 0x14:
+unser output: 20
+python: >>> flynn.loads(b'\x14')
+20
+
+Encode 30:
+unser output: 0x181E  // in binary: 00011000 00011110
+>>> flynn.dumps(30)
+'\x18\x1e'
+
+Decode 0x181E:
+unser output: 30
+python: >>> flynn.loads(b'\x18\x1e')
+ERROR
+
+
+********************   Major type 1 (negative integers):   ********************
+Encode -20:
+unser output: 0x33
+python: >>> flynn.dumps(-20)
+'3'  // 33 in hex, 51 in dec, 00110011 in bin. 10011 in bin entspricht 19, also richtig.
+
+Decode 0x33:
+unser output: -20
+python: >>> flynn.loads(b'\x33')
+-20
+
+Encode -300:
+unser output: 0x39012B
+python: >>> flynn.dumps(-300)
+'\x39\x01\x2b'
+
+Decode 0x39012B:
+unser output: -300
+python: >>> flynn.loads(b'\x39\x01\x2b')
+ERROR
+
+*********************   Major type 2 (text strings):  OK   **********************
+Encode "abc":
+unser output: 0x43616263
+python: flynn.dumps("abc")
+'Cabc' // C in hexadezimal ist 43
+
+Decode 0x43616263:
+unser output: abc
+python: flynn.loads('\x43\x61\x62\x63')
+'abc'
+>>> flynn.loads('Cabc')
+'abc'
+
+
+Encode 500 'a':
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+python: >>> flynn.dumps('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+'Y\x01,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'  // Y\x01, =  \x59\x01\x2c  =  01011001 00000001 00101100 (AI=25)
+
+
+Decode the above:
+python: >>> flynn.loads('Y\x01,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+ERROR
+
+*********************   Major type 3 (unicode strings):  OK  *********************
+Encode "abc":
+unser output: 0x63616263
+python: >>> flynn.dumps(u'abc')
+'cabc' // c in hexadezimal ist 63
+
+Decode 0x63616263
+unser output: "abc"
+python: >>> flynn.loads(b'\x63\x61\x62\x63')
+u'abc'
+
+
+Decode unicode string of 500 single 'a's:
+python: >>> flynn.loads('\x79\x01,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+ERROR
+
+****************   Major type 4 (arrays of data items)   *******************
+
+
+****************   Major type 5 (maps of pairs of data items)   *******************
+Encode:
+key1 = u'Fun'; value1 = true; key2 = u'Amt'; value2 = -2
+python: >>> flynn.dumps({u'Fun': True, u'Amt': -2})
+'\xa2cFun\xf5cAmt!'
+unser output:
+
+Decode 0xbf6346756ef563416d7421ff
+unser output:
+python: >>> flynn.loads(b'\xbf\x63\x46\x75\x6e\xf5\x63\x41\x6d\x74\x21\xff')
+{u'Fun': True, u'Amt': -2}
+
+
+****************   Major type 7 (floats)   *******************
