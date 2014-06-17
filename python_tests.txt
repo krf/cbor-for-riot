@@ -21,6 +21,16 @@ unser output: 30
 python: >>> flynn.loads(b'\x18\x1e')
 ERROR
 
+Encode 70000 (needs to be represented in a uint32):
+unser output: 0x1A00011170
+python: >>> flynn.dumps(70000)
+'\x1a\x00\x01\x11\x70'
+
+Decode 0x1A00011170:
+unser output: 70000
+python: >>> flynn.loads(b'\x1a\x00\x01\x11\x70')
+ERROR
+
 
 ********************   Major type 1 (negative integers):   ********************
 Encode -20:
