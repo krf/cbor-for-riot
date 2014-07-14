@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<script src="/uni-js-libraries/cbor.js"></script>
+</head>
+
+<body>
+	<script>
+	function arrayBufferToHex(ab) {
+		var hex = new Uint8Array(ab);
+		var hexStr = "";
+		for (var i = 0; i<ab.byteLength; i++) {
+			hexStr += "0x" + hex[i].toString(16) + " ";
+		}
+		return hexStr;
+	}
+	
+	function testMajorType(input, majorType) {
+		var encoded = CBOR.encode(input);
+		var decoded = CBOR.decode(encoded);
+		var out = "<br><br>Major type: "+majorType+", value: "+input+"<br>encoded: " + arrayBufferToHex(encoded) +"<br>decoded: "+decoded;
+		return out;
+	}
+	
+	// Major type 0 test:
+	var initial = 1;
+	document.write(testMajorType(initial, 0));
+	
+	// Major type 1 test:
+	var initial = -500;
+	document.write(testMajorType(initial, 1));
+	
+	// Major type 3 test:
+	var initial = "abc";
+	document.write(testMajorType(initial, 3));
+	
+	//var initial = { Hello: "World" };
+	// array buffer to string:
+	//var str = String.fromCharCode.apply(null, new Uint8Array(encoded));
+	</script>
+</body>
+</html>
