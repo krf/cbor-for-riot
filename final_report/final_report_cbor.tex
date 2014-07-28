@@ -964,7 +964,7 @@ We provide a \textit{cbor\_stream\_decode()} function which takes a CBOR stream 
 \end{itemize}
 
 \subsection{API}
-All of our \textit{serialize} functions receive a pointer to the CBOR struct where the serialized data is to be stored, and the value to be serialized.\\\\
+All of our \textit{serialize} functions receive a pointer to the CBOR struct where the serialized data is to be stored, and the value to be serialized. Every serialize function checks whether there is enough space left in the CBOR struct before writing any data (CBOR\_ENSURE\_SIZE).\\\\
 All of our \textit{deserialize} functions receive a pointer to the CBOR struct to read the encoded data from, the offset indicating where in the CBOR stream decoding should begin, and a pointer to the variable where the deserialized data item is to be stored.\\\\
 Initially, we intended for our deserialize functions to return the deserialized values. Instead we decided to let them return the number of bytes read by them, so that the deserialize function that is called after them knows at which offset to continue.
 
