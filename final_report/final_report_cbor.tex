@@ -1105,33 +1105,36 @@ The following C types are supported by the above mentioned (de)serialize functio
 \subsubsection{Major Type 3}
 Since we do not have a standardized C type for representing Unicode code points, we just provide API to serialize/deserialize @e char* arrays. The user then has to transform that into a meaningful representation
 \subsubsection{Major Type 6}
-Encoding date and time: date/time strings that follow the standard format described in Section 3.3 of [RFC3339]:
-\begin{itemize}
-\item   2003-12-13T18:30:02Z          - supported
-\item   2003-12-13T18:30:02.25Z       - not supported
-\item   2003-12-13T18:30:02+01:00     - not supported
-\item   2003-12-13T18:30:02.25+01:00  - not supported
-\end{itemize}
+Encoding date and time: date/time strings that follow the standard format described in Section 3.3 of [RFC3339]:\\\\
+\begin{tabular}{ l l }
+  2003-12-13T18:30:02Z         & - supported \\
+  2003-12-13T18:30:02.25Z      & - not supported \\
+  2003-12-13T18:30:02+01:00    & - not supported \\
+  2003-12-13T18:30:02.25+01:00 & - not supported \\
+\end{tabular}
+\\\\\\
 Since we do not have C types for representing bignums/bigfloats/decimal-fraction we do not provide API to serialize/deserialize them at all. You can still read out the actual data item behind the tag (via cbor\_deserialize\_byte\_string()) and interpret it yourself.
 \subsubsection{Major Type 7}
-Simple values:
-\begin{itemize}
-\item   0-19: (Unassigned)    - No support
-\item  20,21: True, False     - Supported (see cbor\_serialize\_bool(), cbor\_deserialize\_bool())
-\item  22,23: Null, Undefined - No support (what's the use-case?)
-\item  24-31: (Reserved)      - Supported
-\item  32-255: (Unassigned)   - No support
-\end{itemize}
+Simple values:\\
+\begin{tabular}{ l p{4.5cm} }
+  0-19:~~ (Unassigned)    & - not supported \\
+  20,21:~ True, False     & - supported (see cbor\_serialize\_bool(), cbor\_deserialize\_bool()) \\
+  22,23:~ Null, Undefined & - not supported (what's the use-case?) \\
+  24-31:~ (Reserved)      & - supported \\
+  32-255: (Unassigned)    & - not supported \\
+\end{tabular}
 
 
 \subsection{Testing Our Implementation Against Other Working Implementations}
 \subsubsection{Python Implementation}
-Serialize tests were successful, however the python implementation could not successfully deserialize the output of its own serialize functions.
+Serialize tests were successful, however the python implementation could not successfully deserialize the output of its own serialize functions.\\
+Link: \url{https://github.com/fritz0705/flynn}
 \subsubsection{Perl Implementation}
-Due to the fact that the serialize functions stored their output in a string, we couldn't find a way to display the actual encoded bytes (printf refused to display anything remotely numeric) and hence couldn't compare with our own encoded items.
+Due to the fact that the serialize functions stored their output in a string, we couldn't find a way to display the actual encoded bytes (printf refused to display anything remotely numeric) and hence couldn't compare with our own encoded items.\\
+Link: \url{http://pod.tst.eu/http://cvs.schmorp.de/CBOR-XS/XS.pm}
 \subsubsection{JavaScript Implementation}
-Very easy to use, worked like a charm. All serialize and deserialize tests were successful.
-
+Very easy to use, worked like a charm. All serialize and deserialize tests were successful.\\
+Link: \url{https://github.com/paroga/cbor-js}
 
 \section{Usage Example}
 \begin{lstlisting}[language=C]
@@ -1177,7 +1180,7 @@ Not a single malloc!\\
 CBOR\_NO\_CTIME: All ctime related features removed\\
 CBOR\_NO\_FLOAT: All floating-point related features removed\\
 CBOR\_NO\_STREAM\_DECODE: Generic decoding feature removed\\
-CBOR\_NO\_PRINT: All print functions removed, ENABLE\_DEBUG on\\
+CBOR\_NO\_PRINT: All print functions removed, ENABLE\_DEBUG off\\
 CBOR\_NO\_SEMANTIC\_TAGGING: All semantic tagging related features removed\\
 \item Small code size with minimal feature set\\
 \item Example: cbor.a targetting msb-430:\\
