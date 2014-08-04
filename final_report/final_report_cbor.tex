@@ -964,9 +964,9 @@ We provide a \textit{cbor\_stream\_decode()} function which takes a CBOR stream 
 \end{itemize}
 
 \subsection{API}
-All of our \textit{serialize} functions receive a pointer to the CBOR struct where the serialized data is to be stored, and the value to be serialized. Every serialize function checks whether there is enough space left in the CBOR struct before writing any data (CBOR\_ENSURE\_SIZE).\\\\
+All of our \textit{serialize} functions receive a pointer to the CBOR struct where the serialized data is to be stored, and the value to be serialized. Every serialize function checks whether there is enough space left in the CBOR struct before writing any data (\textit{CBOR\_ENSURE\_SIZE}).\\\\
 All of our \textit{deserialize} functions receive a pointer to the CBOR struct to read the encoded data from, the offset indicating where in the CBOR stream decoding should begin, and a pointer to the variable where the deserialized data item is to be stored.\\\\
-Initially, we intended for our deserialize functions to return the deserialized values. Instead we decided to let them return the number of bytes read by them, so that the deserialize function that is called after them knows at which offset to continue.
+Initially, we intended to \textit{return} the deserialized values for our deserialize functions. Instead we decided to let them return the number of bytes read by them, so that the deserialize function that is called after them knows at which offset to continue.
 
 \subsubsection{CBOR Stream Data Structure}
 \begin{lstlisting}[language=C]
@@ -1107,23 +1107,23 @@ Since we do not have a standardized C type for representing Unicode code points,
 \subsubsection{Major Type 6}
 Encoding date and time: date/time strings that follow the standard format described in Section 3.3 of [RFC3339]:\\\\
 \begin{tabular}{ l l }
-  2003-12-13T18:30:02Z         & - supported \\
-  2003-12-13T18:30:02.25Z      & - not supported \\
-  2003-12-13T18:30:02+01:00    & - not supported \\
-  2003-12-13T18:30:02.25+01:00 & - not supported \\
+  "2003-12-13T18:30:02Z"         & - supported \\
+  "2003-12-13T18:30:02.25Z"      & - not supported \\
+  "2003-12-13T18:30:02+01:00"    & - not supported \\
+  "2003-12-13T18:30:02.25+01:00" & - not supported \\
 \end{tabular}
 \\\\\\
 Since we do not have C types for representing bignums/bigfloats/decimal-fraction we do not provide API to serialize/deserialize them at all. You can still read out the actual data item behind the tag (via cbor\_deserialize\_byte\_string()) and interpret it yourself.
-\subsubsection{Major Type 7}
-Simple values:\\
-\begin{tabular}{ l p{4.5cm} }
-  0-19:~~ (Unassigned)    & - not supported \\
-  20,21:~ True, False     & - supported (see cbor\_serialize\_bool(), cbor\_deserialize\_bool()) \\
-  22,23:~ Null, Undefined & - not supported (what's the use-case?) \\
-  24-31:~ (Reserved)      & - supported \\
-  32-255: (Unassigned)    & - not supported \\
-\end{tabular}
 
+\subsubsection{Major Type 7}
+Simple values:\\\\
+\begin{tabular}{ ll p{4.5cm} }
+  0-19:   & (Unassigned)    & - not supported \\
+  20,21:  & True, False     & - supported \\
+  22,23:  & Null, Undefined & - not supported \\
+  24-31:  & (Reserved)      & - supported \\
+  32-255: & (Unassigned)    & - not supported \\
+\end{tabular}
 
 \subsection{Testing Our Implementation Against Other Working Implementations}
 \subsubsection{Python Implementation}
@@ -1191,18 +1191,30 @@ CBOR\_NO\_SEMANTIC\_TAGGING: All semantic tagging related features removed\\
 
 
 \section{Pull Request}
-Link to pull request: \url{https://github.com/RIOT-OS/RIOT/pull/1415}\\
-Link to CBOR branch: \url{https://github.com/krf/RIOT/tree/cbor/tests/unittests}
+Link to pull request:\\
+\url{https://github.com/RIOT-OS/RIOT/pull/1415}
 
 \section{References}
-CBOR RFC: \url{https://tools.ietf.org/html/rfc7049}\\
-CBOR implementations in other languages: \url{http://cbor.io/impls.html}\\
-CBOR implementation in C++: \url{http://sourceforge.net/p/s11n/svn/HEAD/tree/c11n/include/s11n.net/c11n/c11n.h}\\
-CBOR implementation in Python: \url{https://github.com/fritz0705/flynn}\\
-CBOR implementation in Perl: \url{http://pod.tst.eu/http://cvs.schmorp.de/CBOR-XS/XS.pm}\\
-CBOR implementation in JavaScript: \url{https://github.com/paroga/cbor-js}\\
-RIOT OS source code: \url{https://github.com/RIOT-OS/RIOT/}\\
-RIOT OS wiki: \url{https://github.com/RIOT-OS/RIOT/wiki}\\
+\begin{itemize}
+\item CBOR RFC:\\
+  \url{https://tools.ietf.org/html/rfc7049}
+\item CBOR implementations in other languages:\\
+  \url{http://cbor.io/impls.html}
+\item CBOR implementation in C++:\\
+  \url{http://sourceforge.net/p/s11n/svn/HEAD/tree/c11n/include/s11n.net/c11n/c11n.h}
+\item CBOR implementation in Python:\\
+  \url{https://github.com/fritz0705/flynn}
+\item CBOR implementation in Perl:\\
+  \url{http://pod.tst.eu/http://cvs.schmorp.de/CBOR-XS/XS.pm}
+\item CBOR implementation in JavaScript:\\
+  \url{https://github.com/paroga/cbor-js}
+\item RIOT OS source code:\\
+  \url{https://github.com/RIOT-OS/RIOT/}
+\item RIOT OS wiki:\\
+  \url{https://github.com/RIOT-OS/RIOT/wiki}
+\item RFC3339 (Date and Time on the Internet: Timestamps):\\
+  \url{https://www.ietf.org/rfc/rfc3339.txt}
+\end{itemize}
 
 
 % An example of a floating figure using the graphicx package.
